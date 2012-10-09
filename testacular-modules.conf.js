@@ -6,7 +6,7 @@ exclude = ['**/*jasmine*/**', '**/*jstd*/**'];
 autoWatch = true;
 logLevel = LOG_INFO;
 logColors = true;
-browsers = ['Chrome'];
+browsers = ['C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'];
 
 junitReporter = {
   outputFile: 'test_out/modules.xml',
