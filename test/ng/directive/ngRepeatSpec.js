@@ -215,6 +215,29 @@ describe('ngRepeat', function() {
   });
 
 
+  it('should expose identifier as $varIdentifier when iterating over arrays',
+      function() {
+    element = $compile(
+      '<ul>' +
+        '<li ng-repeat="item in items">{{item}}:{{$varIdentifier}}:{{$keyIdentifier}}|</li>' +
+      '</ul>')(scope);
+    scope.items = ['misko', 'shyam', 'frodo'];
+    scope.$digest();
+    expect(element.text()).toEqual('misko:item:|shyam:item:|frodo:item:|');
+  });
+
+
+  it('should expose identifiers as $keyIdentifier, $varIdentifier when iterating over objects', function() {
+    element = $compile(
+      '<ul>' +
+        '<li ng-repeat="(key, val) in items">{{key}}:{{val}}:{{$varIdentifier}}:{{$keyIdentifier}}|</li>' +
+      '</ul>')(scope);
+    scope.items = {'misko':'m', 'shyam':'s', 'frodo':'f'};
+    scope.$digest();
+    expect(element.text()).toEqual('frodo:f:val:key|misko:m:val:key|shyam:s:val:key|');
+  });
+
+
   it('should expose iterator offset as $index when iterating over arrays',
       function() {
     element = $compile(

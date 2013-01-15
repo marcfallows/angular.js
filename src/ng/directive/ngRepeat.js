@@ -15,6 +15,8 @@
  *   * `$first` – `{boolean}` – true if the repeated element is first in the iterator.
  *   * `$middle` – `{boolean}` – true if the repeated element is between the first and last in the iterator.
  *   * `$last` – `{boolean}` – true if the repeated element is last in the iterator.
+ *   * `$keyIdentifier` – `{string}` – Identifier for the key in the (key,value) pair in the expression (if applicable)
+ *   * `$varIdentifier` – `{string}` – Identifier for the variable in the expression
  *
  *
  * @element ANY
@@ -151,6 +153,8 @@ var ngRepeatDirective = ngDirective({
           childScope.$first = (index === 0);
           childScope.$last = (index === (collectionLength - 1));
           childScope.$middle = !(childScope.$first || childScope.$last);
+          childScope.$varIdentifier = valueIdent;
+          if (keyIdent) childScope.$keyIdentifier = keyIdent;
 
           if (!last) {
             linker(childScope, function(clone){
