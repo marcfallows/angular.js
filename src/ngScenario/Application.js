@@ -69,20 +69,39 @@ angular.scenario.Application.prototype.navigateTo = function(url, loadFn, errorF
         var $window = self.getWindow_();
 
         if ($window.angular) {
+
+          var resumeBootstrap = function(extraModules){
+            if(!$window.angular.resumeBootstrap)
+            {
+              $window.setTimeout(function(){
+                resumeBootstrap(extraModules);
+              }, 100);
+              return;
+            }
+
+            var $injector = $window.angular.resumeBootstrap(extraModules);
+
+            self.$rootElement = _jQuery($injector.get('$rootElement'));
+            self.$rootElement.injector = function() {
+              return $injector;
+            };
+            self.executeAction(loadFn);
+          };
+
           // Disable animations
 
           // TODO(i): this doesn't disable javascript animations
           //          we don't need that for our tests, but it should be done
-          $window.angular.resumeBootstrap([['$provide', function($provide) {
+          resumeBootstrap([['$provide', function($provide) {
             $provide.decorator('$sniffer', function($delegate) {
               $delegate.transitions = false;
               $delegate.animations = false;
               return $delegate;
             });
           }]]);
+        } else {
+          self.executeAction(loadFn);
         }
-
-        self.executeAction(loadFn);
       } catch (e) {
         errorFn(e);
       }
@@ -110,18 +129,15 @@ angular.scenario.Application.prototype.executeAction = function(action) {
   if (!$window.angular) {
     return action.call(this, $window, _jQuery($window.document));
   }
-  angularInit($window.document, function(element) {
-    var $injector = $window.angular.element(element).injector();
-    var $element = _jQuery(element);
 
-    $element.injector = function() {
-      return $injector;
-    };
+  if(self.$rootElement){
+    var $element = self.$rootElement;
+    var $injector = $element.injector();
 
     $injector.invoke(function($browser){
       $browser.notifyWhenNoOutstandingRequests(function() {
         action.call(self, $window, $element);
       });
     });
-  });
+  }
 };

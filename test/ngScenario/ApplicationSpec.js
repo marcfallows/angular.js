@@ -128,6 +128,12 @@ describe('angular.scenario.Application', function() {
         service: {}
       }
     };
+
+    app.$rootElement = _jQuery(testWindow.document);
+    app.$rootElement.injector = function(){
+      return $injector;
+    };
+
     $browser.notifyWhenNoOutstandingRequests = function(fn) {
       handlers.push(fn);
     };

@@ -50,6 +50,11 @@ describe("angular.scenario.dsl", function() {
       $window.location = url;
       callback();
     };
+    $root.application.$rootElement = _jQuery($window.document);
+    $root.application.$rootElement.injector = function(){
+      return $injector;
+    };
+
     // Just use the real one since it delegates to this.addFuture
     $root.addFutureAction = angular.scenario.
       SpecRunner.prototype.addFutureAction;

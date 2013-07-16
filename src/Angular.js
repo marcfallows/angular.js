@@ -1016,7 +1016,7 @@ function bootstrap(element, modules) {
     forEach(extraModules, function(module) {
       modules.push(module);
     });
-    resumeBootstrapInternal();
+    return resumeBootstrapInternal();
   };
 }
 
